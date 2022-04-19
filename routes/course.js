@@ -64,7 +64,7 @@ router.post(
   "/course/video-upload/:instructorId",
   requireSignIn,
   isInstructor,
-  formidableMiddleware(),
+  formidableMiddleware({ maxFileSize: 500 * 1024 * 1024 }),
   uploadVideo
 );
 router.post(
