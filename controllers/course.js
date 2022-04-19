@@ -407,6 +407,7 @@ export const markCompleted = async (req, res) => {
     const { lessonId, courseId } = req.body;
     var id = mongoose.Types.ObjectId(courseId);
     var userIdObj = mongoose.Types.ObjectId(req.user._id);
+
     const course = await Course.findOne(id);
     const existing = await Completed.findOne({
       user: userIdObj,
@@ -425,7 +426,7 @@ export const markCompleted = async (req, res) => {
       res.json({ ok: true });
     } else {
       const created = await new Completed({
-        user: lessonIdObj,
+        user: userIdObj,
         course: id,
         lessons: lessonId,
       }).save();
