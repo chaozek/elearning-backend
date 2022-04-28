@@ -13,8 +13,13 @@ const client = new AWS.SES({
 
 export const register = async (req, res) => {
   try {
+    if (req.body.password !== req.body.repeatPassword) {
+      return res.status(400).send({ message: "Passwords doesn´t match" });
+    }
     if (!(req.body.email && req.body.password)) {
-      return res.status(400).send({ message: "Data not formatted properly" });
+      return res
+        .status(400)
+        .send({ message: "Data are not formatted properly" });
     }
     const emailFromDatabase = await User.findOne({ email: req.body.email });
     if (emailFromDatabase) {
@@ -35,6 +40,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
+    console.log("LOGIN FIRED");
     const body = req.body;
     const user = await User.findOne({ email: body.email });
     if (user == null) {
@@ -48,10 +54,15 @@ export const login = async (req, res) => {
         const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
           expiresIn: "30d",
         });
+        console.log("HITTING");
         res.cookie("token", token, {
           httpOnly: true,
         });
+        res.cookie("user", user._id.toString(), {
+          httpOnly: true,
+        });
         user.password = undefined;
+        console.log(user, "usrrr");
         res.status(200).json({ user });
       } else {
         return res.status(400).json({ error: "Invalid Password" });
@@ -66,6 +77,8 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     res.clearCookie("token");
+    res.clearCookie("user");
+
     return res.status(201).send({ message: "user loged out" });
   } catch (error) {
     res.status(401).json({ error: "server error" });

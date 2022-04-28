@@ -97,6 +97,20 @@ export const read = async (req, res) => {
     return res.status(400).send("Course failede, try again");
   }
 };
+export const readLesson = async (req, res) => {
+  try {
+    console.log(req.params);
+    /*   const course = await Course.findOne({ slug: req.params.slug }).populate(
+      "instructor",
+      "_id name"
+    );
+    res.json(course); */
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Course failede, try again");
+  }
+};
+
 export const courses = async (req, res) => {
   try {
     const courses = await Course.find({ published: true }).populate(
@@ -104,6 +118,27 @@ export const courses = async (req, res) => {
       "_id, name"
     );
     res.json(courses);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send("Course failede, try again");
+  }
+};
+export const personalizedCourses = async (req, res) => {
+  const params = req.params.userId;
+  try {
+    const courses = await Course.find({ published: true });
+    const user = await User.findById(params);
+    let updatedCourses = [];
+    const intersection = courses.filter((element) => {
+      if (user.courses.includes(element._id)) {
+        updatedCourses.push({ ...element._doc, bought: true });
+      } else {
+        updatedCourses.push(element);
+      }
+    });
+    res.json(updatedCourses);
+
+    let newCourses = [];
   } catch (error) {
     console.log(error);
     return res.status(400).send("Course failede, try again");

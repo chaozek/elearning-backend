@@ -8,12 +8,18 @@ export const requireSignIn = jwt({
   secret: process.env.JWT_SECRET,
   algorithms: ["HS256"],
 });
+export const requireCookieToken = (req, res, next) => {
+  if (!req.cookies.user) {
+    return res.sendStatus(403);
+  }
+  next();
+};
 
 export const isInstructor = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user.role.includes("Instructor")) {
-      return res.sendStatus(403);
+      res.sendStatus(403);
     }
     next();
   } catch (error) {
@@ -29,7 +35,6 @@ export const isEnrolled = async (req, res, next) => {
     for (let i = 0; i < user.courses.length; i++) {
       ids.push(user.courses[i].toString());
     }
-    console.log(ids, "IDS");
     if (!ids.includes(course._id.toString())) {
       res.sendStatus(403);
     }
