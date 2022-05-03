@@ -99,12 +99,16 @@ export const read = async (req, res) => {
 };
 export const readLesson = async (req, res) => {
   try {
-    console.log(req.params);
-    /*   const course = await Course.findOne({ slug: req.params.slug }).populate(
-      "instructor",
-      "_id name"
+    const { courseSlug, lessonSlug, lessonId } = req.params;
+    console.log("HIT");
+    const course = await Course.findOne({ slug: courseSlug }).populate(
+      "lessons"
     );
-    res.json(course); */
+    console.log(course, "COURSEEEEEE");
+    const lessons = course.lessons;
+    const lesson = await lessons.find((x) => x._id.toString() == lessonId);
+
+    res.json({ lesson, course });
   } catch (error) {
     console.log(error);
     return res.status(400).send("Course failede, try again");

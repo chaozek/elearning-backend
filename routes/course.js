@@ -89,7 +89,11 @@ router.post("/paid-enrollment/:courseId", requireSignIn, paidEnrollment);
 router.get("/stripe-success/:courseId", requireSignIn, stripeSuccess);
 router.get("/user-courses", requireSignIn, requireCookieToken, userCourses);
 router.get("/course/user/:slug", requireSignIn, isEnrolled, read);
-router.get("/course/user/:courseSlug/:lessonSlug", requireSignIn, readLesson);
+router.get(
+  "/course/user/:courseSlug/:lessonSlug/:lessonId",
+  requireSignIn,
+  readLesson
+);
 router.post("/mark-complete", requireSignIn, markCompleted);
 router.post("/list-completed", requireSignIn, listCompleted);
 router.post("/mark-incompleted", requireSignIn, markIncompleted);
