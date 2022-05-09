@@ -98,11 +98,12 @@ export const instructorBalance = async (req, res) => {
 
 export const payoutSettings = async (req, res) => {
   try {
+    console.log("HIT");
     const user = await User.findById(req.user._id);
-    console.log(user, " user.stripe_account_id");
-    console.log(user.stripe_account_id, " user.stripe_account_id");
+    const userStripeId = user.stripe_seller.id;
+    console.log(userStripeId, "IDDDS");
     const loginLink = await stripe.accounts.createLoginLink(
-      user.stripe_account_id,
+      user.stripe_account_id || userStripeId,
       {
         redirect_url: process.env.STRIPE_SETTINGS_REDIRECT,
       }
