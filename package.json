@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r esm server.js"
+    "start": "nodemon -r esm server.js",
+    "build": "npm run build",
+    "heroku-postbuild": "npm run build"
+
+
   },
   "keywords": [],
   "author": "",
