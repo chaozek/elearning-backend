@@ -1,14 +1,13 @@
 {
-  "name": "BE",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "12.11.1"
+  },
   "scripts": {
-    "start": "nodemon -r esm server.js",
-    "build": "npm run build",
-    "heroku-postbuild": "npm run build"
-
-
+    "start": "nodemon -r esm server.js"
   },
   "keywords": [],
   "author": "",
